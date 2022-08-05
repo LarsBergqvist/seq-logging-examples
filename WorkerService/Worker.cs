@@ -3,10 +3,11 @@
 public class Worker : BackgroundService
 {
     private readonly ILogger<Worker> _logger;
-
-    public Worker(ILogger<Worker> logger)
+    private readonly INumberService<int> _numberService;
+    public Worker(ILogger<Worker> logger, INumberService<int> numberService)
     {
         _logger = logger;
+        _numberService = numberService;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -14,7 +15,9 @@ public class Worker : BackgroundService
         while (!stoppingToken.IsCancellationRequested)
         {
             _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-            await Task.Delay(1000, stoppingToken);
+            var result = _numberService.GetNumber();
+            _logger.LogInformation("Number service returned: {Number}", result.Value);
+            await Task.Delay(5000, stoppingToken);
         }
     }
 }

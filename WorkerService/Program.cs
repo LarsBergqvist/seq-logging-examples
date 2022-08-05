@@ -1,8 +1,9 @@
 ﻿using WorkerService;
 
-IHost host = Host.CreateDefaultBuilder(args)
+var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
     {
+        services.AddTransient<INumberService<int>, MagicNumberGenerator>();
         services.AddHostedService<Worker>();
         services.AddLogging(loggingBuilder =>
         {
